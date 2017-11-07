@@ -1,4 +1,44 @@
 # iOS10LogTool
+
+lzy使用：
+似乎在iPhone X模拟器上回闪退。
+
+1、把文件夹导入工程，
+2、AppDelegate：
+#import "SQLogToolManager.h"
+    [[SQLogToolManager shareManager] logIntial];
+
+
+3、要调试的第一个界面开始，把“调试全局小球”调出来。
+要开始显示小球的类：
+
+#import "SQLogToolManager.h"
+
+    //设置成SQLogToolManagerLevelText模式
+    [SQLogToolManager shareManager].logLevel = SQLogToolManagerLevelText;
+
+4、 在需要打印Log的地方使用 ``NSLogD()``来替换平常用的``NSLog()``
+一般工程里会有个pch，
+我一般会使用这个宏：
+
+
+#ifdef DEBUG
+
+#define DebugLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+#define ULog(fmt, ...)  { UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%s\n [Line %d] ", __PRETTY_FUNCTION__, __LINE__] message:[NSString stringWithFormat:fmt, ##__VA_ARGS__]  delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil]; [alert show]; }
+
+
+#else
+#define DebugLog(...)
+#define ULog(...)
+
+#endif
+
+只需把 里头的NSLog改为NSLogD，就好了。
+
+------------下面是原readMe---------
+
 一个解决iOS10在发布环境下无法查看调试log的小工具
 
 简书介绍地址：[【iOS开发】iOS10 Log调试小工具](http://www.jianshu.com/p/23011d141622)
